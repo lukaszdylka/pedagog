@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karta pomocy psychologiczno-pedagogicznej</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #185FA5; --blue-light: #E6F1FB; --blue-mid: #B5D4F4;
+    --green: #1D9E75; --green-light: #EAF3DE;
+    --amber: #BA7517; --amber-light: #FAEEDA;
+    --text: #1a1a1a; --text-muted: #666; --text-hint: #999;
+    --bg: #f5f4f0; --surface: #ffffff; --surface2: #f9f8f5;
+    --border: rgba(0,0,0,0.1); --border-mid: rgba(0,0,0,0.18);
+    --radius: 10px; --radius-sm: 6px;
+  }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; color: var(--text); background: var(--bg); min-height: 100vh; }
+
+  header { background: var(--blue); color: white; padding: 1rem 2rem; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  header h1 { font-size: 17px; font-weight: 500; }
+  header p { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .header-icon { font-size: 28px; }
+
+  .container { max-width: 820px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  .progress-wrap { display: flex; align-items: center; gap: 0; margin-bottom: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .step-tab { flex: 1; padding: 11px 6px; text-align: center; font-size: 12px; color: var(--text-muted); cursor: pointer; border: none; background: none; transition: background 0.15s; border-right: 1px solid var(--border); }
+  .step-tab:last-child { border-right: none; }
+  .step-tab:hover { background: var(--surface2); }
+  .step-tab.active { background: var(--blue-light); color: var(--blue); font-weight: 600; border-bottom: 3px solid var(--blue); }
+  .step-tab.done { color: var(--green); }
+  .step-tab .num { display: block; font-size: 16px; margin-bottom: 2px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--blue); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  .card-title svg { flex-shrink: 0; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { margin-bottom: 12px; }
+  .field:last-child { margin-bottom: 0; }
+  label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em; }
+  input[type=text], input[type=date], select, textarea {
+    width: 100%; padding: 8px 10px; font-size: 14px; font-family: inherit;
+    border: 1px solid var(--border-mid); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-light); }
+  textarea { resize: vertical; line-height: 1.5; }
+
+  .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-hint); margin: 1rem 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+
+  .needs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .need-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; cursor: pointer; transition: all 0.1s; line-height: 1.4; }
+  .need-item:hover { background: var(--surface2); border-color: var(--border-mid); }
+  .need-item.selected { background: var(--blue-light); border-color: var(--blue); color: var(--blue); }
+  .need-item input[type=checkbox] { margin-top: 1px; accent-color: var(--blue); flex-shrink: 0; width: 14px; height: 14px; }
+
+  .info-box { background: var(--amber-light); border: 1px solid #EF9F27; border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; color: var(--amber); margin-bottom: 1rem; display: flex; gap: 8px; align-items: flex-start; }
+
+  .nav-btns { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+  .btn { padding: 10px 22px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; border: 1px solid var(--border-mid); background: var(--surface); color: var(--text); }
+  .btn:hover { background: var(--surface2); }
+  .btn-primary { background: var(--blue); color: white; border-color: var(--blue); }
+  .btn-primary:hover { background: #0C447C; }
+  .btn-green { background: var(--green); color: white; border-color: var(--green); }
+  .btn-green:hover { background: #0F6E56; }
+
+  .preview-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; font-size: 13px; line-height: 1.8; font-family: 'Courier New', monospace; white-space: pre-wrap; max-height: 440px; overflow-y: auto; color: var(--text); }
+  .preview-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+  .badge-done { display: inline-block; background: var(--green-light); color: var(--green); border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 600; margin-left: 6px; }
+  .hidden { display: none; }
+
+  @media print {
+    header, .progress-wrap, .nav-btns, .preview-actions, .info-box { display: none !important; }
+    .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    body { background: white; }
+    .container { padding: 0; max-width: 100%; }
+  }
+
+  @media (max-width: 600px) {
+    .row2 { grid-template-columns: 1fr; }
+    .needs-grid { grid-template-columns: 1fr; }
+    header { padding: 1rem; }
+    .card { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-icon">📋</div>
+  <div>
+    <h1>Karta ucznia objętego pomocą psychologiczno-pedagogiczną</h1>
+    <p>Technikum Mechaniczno-Elektryczne im. Nikoli Tesli w Chorzowie</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="progress-wrap">
+    <button class="step-tab active" id="tab1" onclick="goTo(1)"><span class="num">①</span>Dane ucznia</button>
+    <button class="step-tab" id="tab2" onclick="goTo(2)"><span class="num">②</span>Potrzeby</button>
+    <button class="step-tab" id="tab3" onclick="goTo(3)"><span class="num">③</span>Dostosowania</button>
+    <button class="step-tab" id="tab4" onclick="goTo(4)"><span class="num">④</span>Podgląd</button>
+  </div>
+
+  <!-- KROK 1 -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+        Dane szkoły i roku szkolnego
+      </div>
+      <div class="row2">
+        <div class="field"><label>Rok szkolny</label><input type="text" id="rokSzkolny" value="2024/2025"></div>
+        <div class="field"><label>Klasa</label><input type="text" id="klasa" placeholder="np. 2ig"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Dane ucznia
+      </div>
+      <div class="row2" style="margin-bottom:12px">
+        <div class="field"><label>Imię i nazwisko</label><input type="text" id="imieNazwisko" placeholder="Imię Nazwisko"></div>
+        <div class="field"><label>Data urodzenia</label><input type="date" id="dataUrodzenia"></div>
+      </div>
+      <div class="field"><label>Miejsce zamieszkania</label><input type="text" id="miejsceZamieszkania" placeholder="Miasto, ul. Nazwa xx/xx"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Podstawa objęcia pomocą
+      </div>
+      <div class="info-box">
+        ℹ️ Zaznaczona podstawa: <strong>Opinia poradni psychologiczno-pedagogicznej</strong>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Numer opinii PPP</label><input type="text" id="numerOpinii" placeholder="np. PPP.4200.96.2020/21"></div>
+        <div class="field"><label>Data wydania opinii</label><input type="date" id="dataWydania"></div>
+      </div>
+      <div class="field" style="margin-top:8px"><label>Dotyczy</label><input type="text" id="dotyczy" placeholder="np. dysleksja, dysgrafia..."></div>
+    </div>
+
+    <div class="nav-btns">
+      <div></div>
+      <button class="btn btn-primary" onclick="goTo(2)">Dalej →</button>
+    </div>
+  </div>
+
+  <!-- KROK 2 -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Zakres specjalnych potrzeb edukacyjnych
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Zaznacz jedną lub więcej specjalnych potrzeb:</p>
+      <div class="needs-grid" id="needsGrid"></div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn" onclick="goTo(1)">← Wstecz</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Dalej →</button>
+    </div>
+  </div>
+
+  <!-- KROK 3 -->
+  <div id="step3" class="hidden">
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Podjęte formy pomocy
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px">Zaznacz wybrane formy:</p>
+      <div id="formyGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Sposoby pracy — dostosowania podczas zajęć
+      </div>
+
+      <div class="section-label">W zakresie edukacji polonistycznej</div>
+      <textarea id="adaptPolonistyka" rows="4" placeholder="np. Zrezygnowanie z czytania długich lektur, umożliwienie korzystania ze streszczeń. Dostosowanie kryteriów oceniania jakości ortograficznej i graficznej pisma. Zastępowanie dyktand uzasadnieniem pisowni..."></textarea>
+
+      <div class="section-label">W zakresie edukacji języków obcych</div>
+      <textarea id="adaptJezyki" rows="4" placeholder="np. Umożliwienie wcześniejszego zapoznania się z tekstem. Ocenianie czytania mniejszej ilości tekstu. Zezwolenie na zapisanie trudniejszych słów. Zastępowanie dyktand pisaniem z pamięci..."></textarea>
+
+      <div class="section-label">Na wszystkich przedmiotach</div>
+      <textarea id="adaptWszystkie" rows="4" placeholder="np. Dostosowanie kryteriów oceniania jakości ortograficznej i graficznej. Umożliwienie oddawania dłuższych prac pisemnych sporządzonych na komputerze. Ze względu na trudności w czytaniu, pomaganie w selekcji najważniejszych informacji..."></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Inne sposoby udzielania pomocy / dodatkowa praca dydaktyczna
+      </div>
+      <textarea id="dodatkowaPraca" rows="3" placeholder="np. Utrwalanie zasad ortograficznych i wdrażanie uczennicy do posługiwania się nimi podczas pisania. Prowadzenie różnorodnych ćwiczeń usprawniających technikę czytania. Rozwijanie funkcji percepcyjnych..."></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Zatwierdzenie
+      </div>
+      <div class="row2">
+        <div class="field"><label>Miejscowość i data</label><input type="text" id="dataZatwierdzenia" placeholder="np. Chorzów, 18.09.2024 r."></div>
+        <div class="field"><label>Wychowawca / pedagog (podpis)</label><input type="text" id="wychowawca" placeholder="Imię i nazwisko"></div>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn" onclick="goTo(2)">← Wstecz</button>
+      <button class="btn btn-primary" onclick="goTo(4)">Podgląd →</button>
+    </div>
+  </div>
+
+  <!-- KROK 4 -->
+  <div id="step4" class="hidden">
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Podgląd karty pomocy PP
+      </div>
+      <div class="preview-box" id="previewBox"></div>
+      <div class="preview-actions">
+        <button class="btn" onclick="copyText()">📋 Kopiuj tekst</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Drukuj</button>
+        <button class="btn btn-green" onclick="goTo(1)" style="margin-left:auto">✏️ Edytuj od początku</button>
+      </div>
+      <p style="font-size:12px;color:var(--text-hint);margin-top:10px;line-height:1.5">
+        Wskazówka: po skopiowaniu tekstu możesz wkleić go do dokumentu Word i sformatować. Do druku użyj opcji drukowania — układ strony zostanie zachowany.
+      </p>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn" onclick="goTo(3)">← Edytuj</button>
+      <div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const NEEDS = [
+  "Niepełnosprawność",
+  "Niedostosowanie społeczne",
+  "Zagrożenie niedostosowaniem społecznym",
+  "Zaburzenia zachowania lub emocji",
+  "Szczególne uzdolnienia",
+  "Specyficzne trudności w uczeniu się (dysleksja)",
+  "Deficyty kompetencji i zaburzenia sprawności językowych",
+  "Choroba przewlekła",
+  "Sytuacja kryzysowa lub traumatyczna",
+  "Niepowodzenia edukacyjne",
+  "Zaniedbania środowiskowe",
+  "Trudności adaptacyjne wynikające ze zmiany środowiska edukacyjnego"
+];
+const FORMY = [
+  "Zajęcia dydaktyczno-wyrównawcze",
+  "Zajęcia specjalistyczne",
+  "Zindywidualizowana ścieżka kształcenia",
+  "Porady i konsultacje",
+  "Inne zajęcia o charakterze terapeutycznym",
+  "Porady i konsultacje z pedagogiem szkolnym"
+];
+
+const selectedNeeds = new Set();
+const selectedFormy = new Set();
+
+const needsGrid = document.getElementById('needsGrid');
+NEEDS.forEach((need, i) => {
+  const div = document.createElement('div');
+  div.className = 'need-item';
+  div.id = 'need_' + i;
+  div.innerHTML = `<input type="checkbox" id="cb_${i}"><label for="cb_${i}" style="cursor:pointer">${i+1}. ${need}</label>`;
+  div.querySelector('input').addEventListener('change', e => {
+    if(e.target.checked) { selectedNeeds.add(i); div.classList.add('selected'); }
+    else { selectedNeeds.delete(i); div.classList.remove('selected'); }
+  });
+  needsGrid.appendChild(div);
+});
+
+const formyGrid = document.getElementById('formyGrid');
+FORMY.forEach((forma, i) => {
+  const div = document.createElement('div');
+  div.className = 'need-item';
+  div.id = 'forma_' + i;
+  div.innerHTML = `<input type="checkbox" id="fcb_${i}"><label for="fcb_${i}" style="cursor:pointer">${forma}</label>`;
+  div.querySelector('input').addEventListener('change', e => {
+    if(e.target.checked) { selectedFormy.add(i); div.classList.add('selected'); }
+    else { selectedFormy.delete(i); div.classList.remove('selected'); }
+  });
+  formyGrid.appendChild(div);
+});
+
+let currentStep = 1;
+
+function goTo(n) {
+  document.getElementById('step' + currentStep).classList.add('hidden');
+  currentStep = n;
+  document.getElementById('step' + n).classList.remove('hidden');
+  document.querySelectorAll('.step-tab').forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if(i+1 < n) el.classList.add('done');
+    if(i+1 === n) el.classList.add('active');
+  });
+  if(n === 4) buildPreview();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+function buildPreview() {
+  const needsList = [...selectedNeeds].sort().map(i => `   ${i+1}. ${NEEDS[i]}`).join('\n');
+  const formyList = [...selectedFormy].sort().map(i => `   • ${FORMY[i]}`).join('\n');
+
+  const text = [
+    'KARTA UCZNIA, KTÓREMU UDZIELANA JEST POMOC',
+    'PSYCHOLOGICZNO-PEDAGOGICZNA',
+    '═'.repeat(58),
+    '',
+    'DANE UCZNIA',
+    `Imię i nazwisko:      ${v('imieNazwisko') || '—'}`,
+    `Data urodzenia:       ${v('dataUrodzenia') || '—'}`,
+    `Miejsce zamieszkania: ${v('miejsceZamieszkania') || '—'}`,
+    '',
+    'DANE SZKOŁY',
+    'Technikum Mechaniczno-Elektryczne im. Nikoli Tesli w Chorzowie',
+    '41-506 Chorzów, ul. Stefana Batorego 37',
+    'tel. 32 2466163  |  sekretariat@teslachorzow.pl',
+    '',
+    `Rok szkolny: ${v('rokSzkolny')}` + (v('klasa') ? `          Klasa: ${v('klasa')}` : ''),
+    '',
+    'PODSTAWA',
+    'x  Opinia poradni psychologiczno-pedagogicznej',
+    `   Numer: ${v('numerOpinii') || '—'}`,
+    `   Data wydania: ${v('dataWydania') || '—'}`,
+    v('dotyczy') ? `   Dotyczy: ${v('dotyczy')}` : '',
+    '',
+    '─'.repeat(58),
+    'ZAKRES SPECJALNYCH POTRZEB EDUKACYJNYCH',
+    '',
+    needsList || '   (nie zaznaczono)',
+    '',
+    '─'.repeat(58),
+    'PODJĘTE FORMY POMOCY',
+    '',
+    formyList || '   (nie zaznaczono)',
+    '',
+    '─'.repeat(58),
+    'SPOSOBY PRACY PODCZAS ZAJĘĆ — DOSTOSOWANIA',
+    '',
+    'W zakresie edukacji polonistycznej:',
+    v('adaptPolonistyka') ? v('adaptPolonistyka').split('\n').map(l => '   ' + l).join('\n') : '   —',
+    '',
+    'W zakresie edukacji języków obcych:',
+    v('adaptJezyki') ? v('adaptJezyki').split('\n').map(l => '   ' + l).join('\n') : '   —',
+    '',
+    'Na wszystkich przedmiotach:',
+    v('adaptWszystkie') ? v('adaptWszystkie').split('\n').map(l => '   ' + l).join('\n') : '   —',
+    '',
+    'Inne sposoby udzielania pomocy / dodatkowa praca dydaktyczna:',
+    v('dodatkowaPraca') ? v('dodatkowaPraca').split('\n').map(l => '   ' + l).join('\n') : '   —',
+    '',
+    '─'.repeat(58),
+    '',
+    v('dataZatwierdzenia') || 'Chorzów, .................',
+    '',
+    `Wychowawca / pedagog: ${v('wychowawca') || '..............................'}`,
+    '',
+    'Zatwierdza:',
+    'DYREKTOR — Technikum Mechaniczno-Elektryczne',
+    'im. Nikoli Tesli w Chorzowie',
+    'mgr Krystian Biadacz',
+    '',
+    '─'.repeat(58),
+    'Oświadczam, że zapoznałam/em się z planem pomocy',
+    'psychologiczno-pedagogicznej i akceptuję go.',
+    '',
+    'Podpis rodzica/opiekuna prawnego/pełnoletniego ucznia:',
+    '......................................................................'
+  ].filter(l => l !== null && l !== undefined).join('\n');
+
+  document.getElementById('previewBox').textContent = text;
+}
+
+function copyText() {
+  const text = document.getElementById('previewBox').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Tekst skopiowany do schowka!');
+  }).catch(() => {
+    const el = document.getElementById('previewBox');
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    alert('Tekst zaznaczony i skopiowany!');
+  });
+}
+</script>
+</body>
+</html>
